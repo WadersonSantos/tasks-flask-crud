@@ -7,7 +7,7 @@ app = Flask(__name__)
 tasks = []
 task_id_control = 1 
 
-@app.route("/tasks", methods=["POST"])
+@app.route("/tasks", methods=['POST'])
 def create_task():
   global task_id_control
   data = request.get_json()
@@ -15,7 +15,8 @@ def create_task():
   task_id_control += 1
   tasks.append(new_task)
   print(tasks)
-  return jsonify({"message:" "New task succesfuly created :)"})
+  return jsonify({"message": "New task succesfully created :)", "id": new_task.id})
+
 
 # READ
 @app.route("/tasks", methods=["GET"])
@@ -33,7 +34,7 @@ def get_task(id):
        if t.id == id:
           return jsonify(t.to_dict())
    
-    return jsonify({"Message:" "Not was possible to find the activite"}), 404  
+    return jsonify({"message": "Not was possible to GET the activite. It wasn't found."}), 404
 
 # UPDATE
   
@@ -43,17 +44,18 @@ def update_task(id):
     for t in tasks:
        if t.id == id:
           task = t
-    print(task)
+          break
+    
     if task == None:      
-        return jsonify({"Message:" "Not was possible to find the activite"}), 404
+        return jsonify({"message": "Not was possible to UPDATE the activite. It wasn't found."}), 404
 
     data = request.get_json()  
     task.title = data["title"]
     task.description = data["description"]
     task.completed = data["completed"]
-    print(task)
     
-    return jsonify({"Message": "Task updated succesfuly!"})
+    
+    return jsonify({"message": "Task updated succesfuly!"})
 
 # DELETE
 
@@ -67,7 +69,7 @@ def delete_task(id):
           break
   
     if task == None:      
-        return jsonify({"Message:" "Not was possible to find the activity"}), 404
+        return jsonify({"message": "Not was possible to DELETE the activite. It wasn't found."}), 404
 
     tasks.remove(task)
     return jsonify({"message": "Task deleted succesfully"})
